@@ -12,6 +12,9 @@ ARCH_NAME=$(echo "$TARGET" | cut -d/ -f3);
 # Src root
 SOURCE_ROOT=$(cd $(dirname $0)/../.. && pwd);
 
+# Porting root
+PORTING_ROOT=$SOURCE_ROOT/porting;
+
 # Prepare output path
 FULL_OUTPUT=$(cd $OUTPUT && pwd)/$SDK_NAME/$ARCH_NAME;
 [[ ! -d $FULL_OUTPUT ]] && mkdir -p $FULL_OUTPUT;
@@ -26,3 +29,9 @@ DEPLOYMENT_TARGET=10.0;
 if [[ $SDK_NAME == *iphone* ]]; then
 	CMAKE_TOOLCHAIN_FILE=$SOURCE_ROOT/ios-cmake/ios.toolchain.cmake;
 fi
+
+# Print summary
+echo " - Lib Name: $LIB_NAME";
+echo " - SDK Name: $SDK_NAME";
+echo " - Arch Name: $ARCH_NAME";
+echo " - CMake Toolchain: $CMAKE_TOOLCHAIN_FILE";

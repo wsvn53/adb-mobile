@@ -7,3 +7,6 @@
 [submodule "external/lz4"]
 	path = external/lz4
 	url = https://android.googlesource.com/platform/external/lz4
+[submodule "external/zstd"]
+	path = external/zstd
+	url = https://android.googlesource.com/platform/external/zstd
