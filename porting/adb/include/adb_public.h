@@ -2,6 +2,7 @@
  * adb.h used for export adb functions
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 
 enum AdbTrace {
@@ -27,6 +28,9 @@ void adb_trace_enable_porting(enum AdbTrace trace_tag);
 // execute adb_commoandline
 int adb_commandline_porting(int argc, const char** argv, char **message);
 
+// adb_commandline_last_output
+char *adb_commandline_last_output(void);
+
 // enable adb verbose trace
 static inline void adb_enable_trace(void) {
 	setenv("ADB_TRACE", "all", 1);
@@ -44,3 +48,6 @@ static inline void adb_set_home(const char *home_dir) {
 static inline void adb_set_server_port(const char *port) {
     setenv("ANDROID_ADB_SERVER_PORT", port, 1);
 }
+
+// required function body
+void adb_connect_status_updated(const char *serial, const char *status);

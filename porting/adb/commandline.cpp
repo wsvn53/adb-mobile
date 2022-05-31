@@ -7,10 +7,12 @@
 int printf_hijack(const char *format, ...);
 size_t fwrite_hijack(const void *__ptr, size_t __size, size_t __nitems, FILE *__stream);
 int fprintf_hijack(FILE *file, const char *format, ...);
+[[noreturn]] void error_exit_hijack(const char* fmt, ...);
 
 #define printf(...)  printf_hijack(__VA_ARGS__)
 #define fwrite(...)  fwrite_hijack(__VA_ARGS__)
 #define fprintf(...) fprintf_hijack(__VA_ARGS__)
+#define error_exit(...)  error_exit_hijack(__VA_ARGS__);
 
 #include "adb/client/commandline.cpp"
 #include "adb/client/line_printer.cpp"
@@ -29,6 +31,7 @@ void append_commandline_stdout(char *text) {
 
 extern "C" {
 int adb_commandline_porting(int argc, const char** argv, char **message);
+char *adb_commandline_last_output();
 }
 
 bool adb_check_server_version(std::string* _Nonnull error);
@@ -87,4 +90,24 @@ int fprintf_hijack(FILE *file, const char *format, ...) {
     va_end(args);
     append_commandline_stdout(text);
     return 0;
+}
+
+void error_exit_hijack(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    int size = vsnprintf(NULL, 0, fmt, args);
+    char text[size+1];
+    vsprintf(text, fmt, args);
+    text[size] = '\0';
+    va_end(args);
+    append_commandline_stdout(text);
+
+    // finally exit thread
+    pthread_exit(NULL);
+}
+
+// when adb command errors occur, thread will exit without return code and message
+// so we need a function to get last ouput
+char *adb_commandline_last_output() {
+    return strdup(adb_commandline_stdout.c_str());
 }

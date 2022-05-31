@@ -9,19 +9,15 @@
 
 #undef fdevent_destroy
 
-unique_fd fdevent_destroy(fdevent* fde) {
+void fdevent_destroy(fdevent* fde) {
     // Use custom destroy function to avoid CHECK_EQ error
     // and avoid CheckMainThread error
-    if (!fde) {
-        return {};
-    }
+    if (!fde) return;
 
     fdevent_get_ambient()->Unregister(fde);
 
     unique_fd fd = std::move(fde->fd);
-
-    auto erased = fdevent_get_ambient()->installed_fdevents_.erase(fd.get());
-    return fd;
+    fdevent_get_ambient()->installed_fdevents_.erase(fd.get());
 }
 
 void fdevent_reset_porting() {

@@ -6,8 +6,10 @@
 #include <pthread.h>
 
 #define launch_server(...)		launch_server_unused(__VA_ARGS__)
+#define update_transport_status(...)		update_transport_status_real(__VA_ARGS__)
 #include "adb/adb.cpp"
 #undef launch_server
+#undef update_transport_status
 
 void fdevent_reset_porting(void);
 void clear_listener_list(void);
@@ -31,11 +33,6 @@ void launch_server_main(int pipe_write, const char *thread_socket_spec) {
         fdevent_reset_porting();
     }
     not_first = true;
-
-#ifdef __ANDROID__
-    android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
-    printf("fdsan_error_level: %d\n", android_fdsan_get_error_level());
-#endif
 
     // Start main server
     adb_server_main(false, thread_socket_spec, pipe_write);
@@ -83,4 +80,24 @@ int launch_server(const std::string& socket_spec) {
     }
 
     return 0;
+}
+
+extern "C" {
+
+__attribute__ ((weak))
+void adb_connect_status_updated(const char *serial, const char *status) {
+    printf("%s", __FUNCTION__);
+}
+
+}
+
+void update_transport_status() {
+    update_transport_status_real();
+
+    // Check all the tcp transports connect status
+    iterate_transports([](const atransport *t) {
+        printf("adb connect status changed: %s -> %s\n", t->serial.c_str(), to_string(t->GetConnectionState()).c_str());
+        adb_connect_status_updated(t->serial.c_str(), to_string(t->GetConnectionState()).c_str());
+        return true;
+    });
 }

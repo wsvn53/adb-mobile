@@ -1,4 +1,4 @@
-iphone: lz4 zstd brotli
+iphone: lz4 zstd brotli adb
 
 ## lz4
 lz4: lz4/iphoneos/arm64 lz4/iphonesimulator/x86_64
