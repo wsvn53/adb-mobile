@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.4.1)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++2a")
+project(protobuf C CXX)
+set(PROJECT_NAME protobuf)
+
+message(STATUS "CMake Path: ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "Platform: ${PLATFORM}")
+
+include_directories(
+        ../../external/protobuf/src
+)
+
+file(GLOB protobuf_srcs 
+        ../../external/protobuf/src/google/protobuf/*.cc
+        ../../external/protobuf/src/google/protobuf/stubs/*.cc
+        ../../external/protobuf/src/google/protobuf/io/*.cc
+        ../../external/protobuf/src/google/protobuf/util/*cc
+        ../../external/protobuf/src/google/protobuf/util/internal/*.cc
+)
+list(FILTER protobuf_srcs EXCLUDE REGEX ".*_test\\.*|.*_unittest\\.*|.*test_util.*|.*_tester.*")
+
+foreach(src IN LISTS protobuf_srcs)
+        message(STATUS "- ${src}")
+endforeach()
+
+add_library(protobuf STATIC
+        ${protobuf_srcs}
+        )

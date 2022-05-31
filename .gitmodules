@@ -10,3 +10,9 @@
 [submodule "external/zstd"]
 	path = external/zstd
 	url = https://android.googlesource.com/platform/external/zstd
+[submodule "external/brotli"]
+	path = external/brotli
+	url = https://android.googlesource.com/platform/external/brotli
+[submodule "external/protobuf"]
+	path = external/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
