@@ -23,7 +23,7 @@ FULL_OUTPUT=$(cd $OUTPUT && pwd)/$SDK_NAME/$ARCH_NAME;
 PLATFORM=$([[ $SDK_NAME == iphoneos ]] && echo "OS64" || echo "SIMULATOR64");
 
 # Setup iphone deploy target
-DEPLOYMENT_TARGET=10.0;
+DEPLOYMENT_TARGET=11.0;
 
 # Setup toolchains
 if [[ $SDK_NAME == *iphone* ]]; then

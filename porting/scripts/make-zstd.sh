@@ -8,7 +8,7 @@ cmake_root=$SOURCE_ROOT/external/zstd/build/cmake/out;
 [[ -d "$cmake_root" ]] && rm -rfv "$cmake_root";
 mkdir -pv "$cmake_root";
 
-cp -av $PORTING_ROOT/cmake/zstd.CMakeLists.txt $cmake_root/../programs/CMakeLists.txt;
+cp -av $PORTING_ROOT/cmake/CMakeLists.zstd.txt $cmake_root/../programs/CMakeLists.txt;
 
 cd "$cmake_root";
 

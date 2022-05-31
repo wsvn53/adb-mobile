@@ -23,3 +23,9 @@ protobuf: protobuf/iphoneos/arm64 protobuf/iphonesimulator/x86_64
 protobuf/%:
 	@echo "|-> Making $@ ..."
 	TARGET=$@ OUTPUT=../output bash ./scripts/make-protobuf.sh
+
+## adb
+adb: adb/iphoneos/arm64 adb/iphonesimulator/x86_64
+adb/%:
+	@echo "|-> Making $@ ..."
+	TARGET=$@ OUTPUT=../output bash ./scripts/make-adb.sh

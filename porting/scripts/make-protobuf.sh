@@ -20,7 +20,7 @@ protoc_version=$(protoc --version | cut -d' ' -f2 | cut -d. -f1 -f2).x;
 git checkout $protoc_version;
 
 # Copy CMakeLists.txt to source folder
-cp $SOURCE_ROOT/porting/cmake/protobuf.CMakeLists.txt $SOURCE_ROOT/external/protobuf/CMakeLists.txt;
+cp $SOURCE_ROOT/porting/cmake/CMakeLists.protobuf.txt $SOURCE_ROOT/external/protobuf/CMakeLists.txt;
 
 cmake .. -G Xcode -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE -DPLATFORM=$PLATFORM -DDEPLOYMENT_TARGET=$DEPLOYMENT_TARGET;
 cmake --build . --target protobuf --config Release --parallel 8;
