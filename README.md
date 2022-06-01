@@ -4,7 +4,7 @@ Android Debug Bridge (adb) ported version for mobile apps, the goal of this proj
 
 Currently only iOS platform is supported, Android version is under development.
 
-[中文文档](README.zh-ch.md)
+[中文文档](README.zh-cn.md)
 
 ## Build Library
 
