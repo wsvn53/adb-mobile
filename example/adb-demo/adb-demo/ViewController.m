@@ -8,6 +8,10 @@
 #import "ViewController.h"
 #import "adb_public.h"
 
+void adb_connect_status_updated(const char *serial, const char *status) {
+    NSLog(@"ADB Status: %s, %s", serial, status);
+}
+
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *adbHost;
 @property (weak, nonatomic) IBOutlet UIButton *adbConnect;
