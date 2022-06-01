@@ -12,6 +12,6 @@ cd "$cmake_root";
 
 cmake .. -G Xcode -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE -DPLATFORM=$PLATFORM  \
 	-DDEPLOYMENT_TARGET=$DEPLOYMENT_TARGET -DBROTLI_BUNDLED_MODE=1;
-cmake --build . --config Release --parallel 8 \
+cmake --build . --config Debug --parallel 8 \
 	--target brotlidec-static --target brotlienc-static --target brotlicommon-static;
 find . -name "*.a" -exec cp -av {} $FULL_OUTPUT \;

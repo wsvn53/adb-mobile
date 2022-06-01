@@ -14,5 +14,5 @@ cd "$cmake_root";
 
 cmake .. -G Xcode -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE -DPLATFORM=$PLATFORM \
 	-DDEPLOYMENT_TARGET=$DEPLOYMENT_TARGET;
-cmake --build . --config Release --target libzstd_static --parallel 8;
+cmake --build . --config Debug --target libzstd_static --parallel 8;
 find . -name "*.a" -exec cp -av {} $FULL_OUTPUT \;

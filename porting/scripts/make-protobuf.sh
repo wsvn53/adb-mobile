@@ -23,5 +23,5 @@ git checkout $protoc_version;
 cp $SOURCE_ROOT/porting/cmake/CMakeLists.protobuf.txt $SOURCE_ROOT/external/protobuf/CMakeLists.txt;
 
 cmake .. -G Xcode -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE -DPLATFORM=$PLATFORM -DDEPLOYMENT_TARGET=$DEPLOYMENT_TARGET;
-cmake --build . --target protobuf --config Release --parallel 8;
+cmake --build . --target protobuf --config Debug --parallel 8;
 find . -name "*.a" -exec cp -av {} $FULL_OUTPUT \;
