@@ -1,6 +1,7 @@
 all: libs libadb.a libadb.include
 
 libs:
+	[[ -d output ]] || mkdir output && echo "mkdir output"
 	make -C porting
 
 libadb.include:
