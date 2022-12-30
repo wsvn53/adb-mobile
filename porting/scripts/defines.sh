@@ -21,6 +21,7 @@ FULL_OUTPUT=$(cd $OUTPUT && pwd)/$SDK_NAME/$ARCH_NAME;
 
 # For iphone, change to platform
 PLATFORM=$([[ $SDK_NAME == iphoneos ]] && echo "OS64" || echo "SIMULATOR64");
+[[ $SDK_NAME == iphonesimulator ]] && [[ $ARCH_NAME == arm64 ]] && PLATFORM=SIMULATORARM64;
 
 # Setup iphone deploy target
 DEPLOYMENT_TARGET=11.0;
@@ -35,3 +36,4 @@ echo " - Lib Name: $LIB_NAME";
 echo " - SDK Name: $SDK_NAME";
 echo " - Arch Name: $ARCH_NAME";
 echo " - CMake Toolchain: $CMAKE_TOOLCHAIN_FILE";
+echo " - CMake PLATFORM: $PLATFORM";

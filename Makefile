@@ -17,6 +17,7 @@ libadb.include:
 	cp -av porting/adb/include/*.h output/include;
 
 libadb.a:
-	libtool -static -o output/libadb-iphoneos.a output/iphoneos/arm64/*.a
-	libtool -static -o output/libadb-iphonesimulator.a output/iphonesimulator/x86_64/*.a
-	lipo -create output/libadb-*.a -output output/libadb.a
+	libtool -static -o output/libadb-iphoneos-arm64.a output/iphoneos/arm64/*.a
+	libtool -static -o output/libadb-iphonesimulator-x86_64.a output/iphonesimulator/x86_64/*.a
+	libtool -static -o output/libadb-iphonesimulator-arm64.a output/iphonesimulator/arm64/*.a
+	lipo -create output/libadb-iphoneos-*.a output/libadb-iphonesimulator-x86_64.a -output output/libadb.a
