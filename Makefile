@@ -1,9 +1,12 @@
 all: check-protobuf-version libs libadb.a libadb.include
 
 check-protobuf-version:
-	@grep $$(protoc --version | cut -d' ' -f2) porting/protobuf.rb || { echo "* To compile adb please install protobuf version 3.19.4 by:" && echo "brew unlink protobuf && brew install porting/protobuf.rb" && echo "" && exit 1; }
+	@grep $$(protoc --version | cut -d' ' -f2) porting/protobuf.rb || { echo "* To compile libadb please install protobuf version 3.19.4 by:" && echo "brew unlink protobuf && brew install porting/protobuf.rb" && echo "" && exit 1; }
 	protoc --version
 	exit 0
+
+check-golang:
+	@which go || { echo "* To compile libadb please install golang by execute:"; echo ""; }
 
 libs:
 	[[ -d output ]] || mkdir output && echo "mkdir output"
