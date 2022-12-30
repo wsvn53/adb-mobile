@@ -310,7 +310,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ladb",
+					"-ladb-$(PLATFORM_NAME)-$(CURRENT_ARCH)",
 					"-lc++",
 					"-lz",
 				);
@@ -346,7 +346,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ladb",
+					"-ladb-$(PLATFORM_NAME)-$(CURRENT_ARCH)",
 					"-lc++",
 					"-lz",
 				);
