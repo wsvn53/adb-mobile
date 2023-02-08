@@ -61,6 +61,7 @@ int printf_hijack(const char *format, ...) {
     va_list args;
     va_start(args, format);
     int size = vsnprintf(NULL, 0, format, args);
+    va_start(args, format);
     char text[size+1];
     vsprintf(text, format, args);
     text[size] = '\0';
@@ -84,6 +85,7 @@ int fprintf_hijack(FILE *file, const char *format, ...) {
     va_list args;
     va_start(args, format);
     int size = vsnprintf(NULL, 0, format, args);
+    va_start(args, format);
     char text[size+1];
     vsprintf(text, format, args);
     text[size] = '\0';
@@ -96,6 +98,7 @@ void error_exit_hijack(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
     int size = vsnprintf(NULL, 0, fmt, args);
+    va_start(args, fmt);
     char text[size+1];
     vsprintf(text, fmt, args);
     text[size] = '\0';
