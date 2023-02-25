@@ -5,10 +5,6 @@
 #include <stdio.h>
 #include <pthread.h>
 
-extern "C" {
-int adb_auth_keygen(const char* filename);
-}
-
 #define launch_server(...)		launch_server_unused(__VA_ARGS__)
 #define update_transport_status(...)		update_transport_status_real(__VA_ARGS__)
 #include "adb/adb.cpp"
@@ -91,6 +87,10 @@ extern "C" {
 __attribute__ ((weak))
 void adb_connect_status_updated(const char *serial, const char *status) {
     printf("%s", __FUNCTION__);
+}
+
+int adb_auth_key_generate(const char* filename) {
+    adb_auth_keygen(filename);
 }
 
 }
