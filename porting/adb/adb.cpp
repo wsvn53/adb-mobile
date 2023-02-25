@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <pthread.h>
 
+extern "C" {
+int adb_auth_keygen(const char* filename);
+}
+
 #define launch_server(...)		launch_server_unused(__VA_ARGS__)
 #define update_transport_status(...)		update_transport_status_real(__VA_ARGS__)
 #include "adb/adb.cpp"
