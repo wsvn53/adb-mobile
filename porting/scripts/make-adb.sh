@@ -13,6 +13,7 @@ cd "$cmake_root";
 # Copy CMakeLists.txt to source folder
 cp -av $SOURCE_ROOT/porting/cmake/CMakeLists.vendor.txt ../vendor/CMakeLists.txt;
 cp -av $SOURCE_ROOT/porting/cmake/CMakeLists.adb.txt ../vendor/CMakeLists.adb.txt;
+cp -av $SOURCE_ROOT/porting/cmake/CMakeLists.crypto.txt ../vendor/boringssl/crypto/CMakeLists.txt
 
 cmake -DCMAKE_OSX_SYSROOT=$SDK_NAME -DCMAKE_OSX_ARCHITECTURES=$ARCH_NAME  \
 	-DCMAKE_OSX_DEPLOYMENT_TARGET=$DEPLOYMENT_TARGET -DCMAKE_BUILD_TYPE=Debug ..;

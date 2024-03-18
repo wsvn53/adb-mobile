@@ -24,7 +24,7 @@ PLATFORM=$([[ $SDK_NAME == iphoneos ]] && echo "OS64" || echo "SIMULATOR64");
 [[ $SDK_NAME == iphonesimulator ]] && [[ $ARCH_NAME == arm64 ]] && PLATFORM=SIMULATORARM64;
 
 # Setup iphone deploy target
-DEPLOYMENT_TARGET=11.0;
+DEPLOYMENT_TARGET=12.0;
 
 # Setup toolchains
 if [[ $SDK_NAME == *iphone* ]]; then
