@@ -37,6 +37,23 @@
 #define CHECK_PACKET_OVERFLOW 1
 #endif
 
+// Call usb_read using a buffer having a multiple of usb_get_max_packet_size() bytes
+// to avoid overflow. See http://libusb.sourceforge.net/api-1.0/packetoverflow.html.
+static int UsbReadMessage(usb_handle* h, amessage* msg) {
+    D("UsbReadMessage");
+    return 0;
+}
+
+// Call usb_read using a buffer having a multiple of usb_get_max_packet_size() bytes
+// to avoid overflow. See http://libusb.sourceforge.net/api-1.0/packetoverflow.html.
+static int UsbReadPayload(usb_handle* h, apacket* p) {
+    return 0;
+}
+
+static int remote_read(apacket* p, usb_handle* usb) {
+    return 0;
+}
+
 UsbConnection::~UsbConnection() {
 }
 
@@ -61,12 +78,13 @@ void UsbConnection::Close() {
 }
 
 void init_usb_transport(atransport* t, usb_handle* h) {
+    D("transport: usb");
 }
 
-int is_adb_interface(int usb_class, int usb_subclass, int usb_protocol) {
-    return (usb_class == ADB_CLASS && usb_subclass == ADB_SUBCLASS && usb_protocol == ADB_PROTOCOL);
+bool is_adb_interface(int usb_class, int usb_subclass, int usb_protocol) {
+    return false;
 }
 
-bool should_use_libusb() {
+bool is_libusb_enabled() {
     return false;
 }

@@ -31,6 +31,20 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     NSArray <NSString *> *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     const char *document_home = documentPaths.lastObject.UTF8String;
     adb_set_home(document_home);
+    
+    // Load defaults
+    NSString *host = [NSUserDefaults.standardUserDefaults objectForKey:@"adbHost"];
+    if (host.length > 0) {
+        self.adbHost.text = host;
+    }
+    NSString *command = [NSUserDefaults.standardUserDefaults objectForKey:@"adbCommand"];
+    if (command.length > 0) {
+        self.adbCommand.text = command;
+    }
+    
+    // Disable auto-correction
+    self.adbHost.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.adbCommand.autocorrectionType = UITextAutocorrectionTypeNo;
 }
 
 -(NSString *)adbExecute:(NSArray <NSString *> *)commands success:(BOOL*)success {
@@ -40,9 +54,15 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     }
     
     char *output = NULL;
-    int ret = adb_commandline_porting((int)commands.count, argv, &output);
+    size_t output_size = 0;
+    int ret = adb_commandline_porting(&output, &output_size, (int)commands.count, argv);
     *success = ret == 0;
-    return [NSString stringWithUTF8String:output];
+    
+    if (output_size > 0) {
+        return [NSString stringWithUTF8String:output];
+    }
+    
+    return @"";
 }
 
 -(void)showAlert:(NSString *)message {
@@ -59,6 +79,10 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     
     [self.adbHost endEditing:YES];
     
+    // Save text value into user defaults
+    [NSUserDefaults.standardUserDefaults setObject:self.adbHost.text forKey:@"adbHost"];
+    [NSUserDefaults.standardUserDefaults synchronize];
+    
     BOOL success = NO;
     NSString *message = [self adbExecute:@[ @"connect", self.adbHost.text ] success:&success];
     [self showAlert:[NSString stringWithFormat:@"Success: %@\nMessage: %@", success?@"YES":@"NO", message]];
@@ -71,6 +95,10 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     }
     
     [self.adbCommand endEditing:YES];
+    
+    // Save text value into user defaults
+    [[NSUserDefaults standardUserDefaults] setObject:self.adbCommand.text forKey:@"adbCommand"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     BOOL success = NO;
     NSString *message = [self adbExecute:[self.adbCommand.text componentsSeparatedByString:@" "] success:&success];

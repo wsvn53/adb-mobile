@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. $(dirname $0)/defines.sh;
+. "$(dirname $0)/defines.sh";
 
 cmake_root=$SOURCE_ROOT/external/zstd/build/cmake/out;
 
@@ -10,7 +10,7 @@ mkdir -pv "$cmake_root";
 
 cp -av $PORTING_ROOT/cmake/CMakeLists.zstd.txt $cmake_root/../programs/CMakeLists.txt;
 
-cd "$cmake_root";
+cd "$cmake_root" || exit;
 
 cmake .. -G Xcode -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE -DPLATFORM=$PLATFORM \
 	-DDEPLOYMENT_TARGET=$DEPLOYMENT_TARGET;

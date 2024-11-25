@@ -22,20 +22,17 @@ enum AdbTrace {
     INCREMENTAL,
 };
 
-void adb_trace_init(char**);
+void adb_trace_init_porting(char**);
 void adb_trace_enable_porting(enum AdbTrace trace_tag);
 
 // execute adb_commoandline
-int adb_commandline_porting(int argc, const char** argv, char **message);
-
-// adb_commandline_last_output
-char *adb_commandline_last_output(void);
+int adb_commandline_porting(char **output_buffer, size_t *output_buffer_size, int argc, const char** argv);
 
 // enable adb verbose trace
 static inline void adb_enable_trace(void) {
 	setenv("ADB_TRACE", "all", 1);
 	const char *argv[] = { "adb" };
-	adb_trace_init((char **)argv);
+	adb_trace_init_porting((char **)argv);
     adb_trace_enable_porting(ADB);
 }
 

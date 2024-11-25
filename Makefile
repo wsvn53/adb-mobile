@@ -1,5 +1,8 @@
 all: check-protobuf-version libs libadb.a libadb.include
 
+brew-install-deps:
+	brew install fmt cmake pkgconfig googletest
+
 check-protobuf-version:
 	@grep $$(protoc --version | cut -d' ' -f2) porting/protobuf.rb || { echo "* To compile libadb please install protobuf version 3.19.4 by:" && echo "brew unlink protobuf && brew install porting/protobuf.rb" && echo "" && exit 1; }
 	protoc --version

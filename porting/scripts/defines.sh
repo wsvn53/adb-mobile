@@ -10,7 +10,7 @@ SDK_NAME=$(echo "$TARGET" | cut -d/ -f2);
 ARCH_NAME=$(echo "$TARGET" | cut -d/ -f3);
 
 # Src root
-SOURCE_ROOT=$(cd $(dirname $0)/../.. && pwd);
+SOURCE_ROOT=$(cd "$(dirname $0)/../.." && pwd);
 
 # Porting root
 PORTING_ROOT=$SOURCE_ROOT/porting;
