@@ -16,8 +16,11 @@
 
 /** hijack launch_server **/
 #define launch_server(...)    launch_server_unused(__VA_ARGS__)
+/** hijack this func to handle adb connect status **/
+#define update_transport_status(...)		update_transport_status_real(__VA_ARGS__)
 #include "adb.cpp"
 #undef launch_server
+#undef update_transport_status
 
 #include "adb_io.cpp"
 #include "adb_utils.cpp"
@@ -308,4 +311,28 @@ int launch_server(const std::string& socket_spec, const char* one_device) {
     }
 
     return 0;
+}
+
+extern "C" {
+
+__attribute__ ((weak))
+void adb_connect_status_updated(const char *serial, const char *status) {
+    printf("%s", __FUNCTION__);
+}
+
+int adb_auth_key_generate(const char* filename) {
+    return adb_auth_keygen(filename);
+}
+
+}
+
+void update_transport_status() {
+    update_transport_status_real();
+
+    // Check all the tcp transports connect status
+    iterate_transports([](const atransport *t) {
+        printf("adb connect status changed: %s -> %s\n", t->serial.c_str(), to_string(t->GetConnectionState()).c_str());
+        adb_connect_status_updated(t->serial.c_str(), to_string(t->GetConnectionState()).c_str());
+        return true;
+    });
 }

@@ -4,6 +4,10 @@ Android Debug Bridge (adb) ported version for mobile apps, the goal of this proj
 
 Currently only iOS platform is supported, Android version is under development.
 
+Update Log:
+
+* 2024-11: Upgrade porting project to ADB 35.0.2, and some API changes.
+
 [中文文档](README.zh-cn.md)
 
 ## Build Library
@@ -55,13 +59,17 @@ adb_set_home(document_home);
 
 // Connecting Android devices
 const char *argv[] = { "connect", "x.x.x." };
-const char *output = null;
-int ret = adb_commandline_porting(2, argv, &output);
+
+// Initialize the output buffer   
+char *output = NULL;
+size_t output_size = 0;
+int ret = adb_commandline_porting(&output, &output_size, 2, argv);
 
 // Execute the ADB commands
 const char *argv[] = { "shell", "ip", "route" };
-const char *output = null;
-int ret = adb_commandline_porting(2, argv, &output);
+char *output = NULL;
+size_t output_size = 0;
+int ret = adb_commandline_porting((&output, &output_size, 2, argv);
 ```
 
 ADB Status Callback:
