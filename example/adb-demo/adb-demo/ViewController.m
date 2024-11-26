@@ -83,8 +83,11 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     [NSUserDefaults.standardUserDefaults setObject:self.adbHost.text forKey:@"adbHost"];
     [NSUserDefaults.standardUserDefaults synchronize];
     
+    NSDate *timeStart = [NSDate date];
+    
     BOOL success = NO;
     NSString *message = [self adbExecute:@[ @"connect", self.adbHost.text ] success:&success];
+    NSLog(@"Time cost: %0.4fs", -[timeStart timeIntervalSinceNow]);
     [self showAlert:[NSString stringWithFormat:@"Success: %@\nMessage: %@", success?@"YES":@"NO", message]];
 }
 
