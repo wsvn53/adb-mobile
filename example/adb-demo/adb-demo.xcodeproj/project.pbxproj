@@ -307,10 +307,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output/$(PLATFORM_NAME)/$(CURRENT_ARCH)";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ladb-$(PLATFORM_NAME)-$(CURRENT_ARCH)",
+					"-ladb-full",
 					"-lc++",
 					"-lz",
 				);
@@ -343,10 +343,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output/$(PLATFORM_NAME)/$(CURRENT_ARCH)";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ladb-$(PLATFORM_NAME)-$(CURRENT_ARCH)",
+					"-ladb-full",
 					"-lc++",
 					"-lz",
 				);
