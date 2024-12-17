@@ -700,7 +700,7 @@ static int adb_shell(char **output_buffer, size_t *output_size, int argc, const 
 
     // Defaults.
     char escape_char = '~';                                                 // -e
-    auto&& features = adb_get_feature_set_or_die();
+    auto&& features = adb_get_feature_set_or_die(output_buffer, output_size);
     bool use_shell_protocol = CanUseFeature(*features, kFeatureShell2);     // -x
     PtyAllocationMode tty = use_shell_protocol ? kPtyAuto : kPtyDefinitely; // -t/-T
 
@@ -716,7 +716,9 @@ static int adb_shell(char **output_buffer, size_t *output_size, int argc, const 
         switch (opt) {
             case 'e':
                 if (!(strlen(optarg) == 1 || strcmp(optarg, "none") == 0)) {
-                    error_exit("-e requires a single-character argument or 'none'");
+                    // error_exit("-e requires a single-character argument or 'none'");
+                    capture_printf(output_buffer, output_size, "error: -e requires a single-character argument or 'none'\n");
+                    return 1;
                 }
                 escape_char = (strcmp(optarg, "none") == 0) ? 0 : optarg[0];
                 break;
@@ -797,9 +799,11 @@ static int adb_shell(char **output_buffer, size_t *output_size, int argc, const 
 }
 
 static int adb_abb(int argc, const char** argv) {
-    auto&& features = adb_get_feature_set_or_die();
+    auto&& features = adb_get_feature_set_or_die(nullptr, nullptr);
     if (!CanUseFeature(*features, kFeatureAbb)) {
-        error_exit("abb is not supported by the device");
+        // error_exit("abb is not supported by the device");
+        capture_printf(nullptr, nullptr, "abb is not supported by the device\n");
+        return 1;
     }
 
     optind = 1;  // argv[0] is always "abb", so set `optind` appropriately.
@@ -1486,11 +1490,13 @@ static int adb_connect_command_bidirectional(const std::string& command) {
     return 0;
 }
 
-const std::optional<FeatureSet>& adb_get_feature_set_or_die(void) {
+const std::optional<FeatureSet>& adb_get_feature_set_or_die(char** out_buf, size_t* out_buf_size) {
     std::string error;
     const std::optional<FeatureSet>& features = adb_get_feature_set(&error);
     if (!features) {
-        error_exit("%s", error.c_str());
+        // error_exit("%s", error.c_str());
+        capture_printf(out_buf, out_buf_size, "%s\n", error.c_str());
+        return std::nullopt;
     }
     return features;
 }
@@ -1500,7 +1506,7 @@ const std::optional<FeatureSet>& adb_get_feature_set_or_die(void) {
 // but they were all moved from adbd to external binaries in the
 // same release.
 static int process_remount_or_verity_service(const int argc, const char** argv) {
-    auto&& features = adb_get_feature_set_or_die();
+    auto&& features = adb_get_feature_set_or_die(nullptr, nullptr);
     if (CanUseFeature(*features, kFeatureRemountShell)) {
         std::vector<const char*> args = {"shell"};
         args.insert(args.cend(), argv, argv + argc);
@@ -1558,7 +1564,7 @@ static bool _is_valid_os_fd(int fd) {
 }
 
 bool forward_dest_is_featured(const std::string& dest, std::string* error) {
-    auto features = adb_get_feature_set_or_die();
+    auto features = adb_get_feature_set_or_die(nullptr, nullptr);
 
     if (android::base::StartsWith(dest, "dev-raw:")) {
         if (!CanUseFeature(*features, kFeatureDevRaw)) {
@@ -2324,7 +2330,7 @@ int adb_commandline(char** out_buf, size_t* out_buf_size, int argc, const char**
     } else if (!strcmp(argv[0], "track-jdwp")) {
         return adb_connect_command("track-jdwp");
     } else if (!strcmp(argv[0], "track-app")) {
-        auto&& features = adb_get_feature_set_or_die();
+        auto&& features = adb_get_feature_set_or_die(out_buf, out_buf_size);
         if (!CanUseFeature(*features, kFeatureTrackApp)) {
             // error_exit("track-app is not supported by the device");
             capture_printf(out_buf, out_buf_size, "track-app is not supported by the device\n");
@@ -2382,7 +2388,7 @@ int adb_commandline(char** out_buf, size_t* out_buf_size, int argc, const char**
         return 0;
     } else if (!strcmp(argv[0], "features")) {
         // Only list the features common to both the adb client and the device.
-        auto&& features = adb_get_feature_set_or_die();
+        auto&& features = adb_get_feature_set_or_die(out_buf, out_buf_size);
 
         for (const std::string& name : *features) {
             if (CanUseFeature(*features, name)) {

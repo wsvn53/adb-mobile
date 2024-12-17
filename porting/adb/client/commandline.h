@@ -118,7 +118,7 @@ extern DefaultStandardStreamsCallback DEFAULT_STANDARD_STREAMS_CALLBACK;
 int adb_commandline(char** out_buf, size_t* out_buf_size, int argc, const char** argv);
 
 // Helper retrieval function.
-const std::optional<FeatureSet>& adb_get_feature_set_or_die();
+const std::optional<FeatureSet>& adb_get_feature_set_or_die(char** out_buf, size_t* out_buf_size);
 
 bool copy_to_file(int inFd, int outFd);
 

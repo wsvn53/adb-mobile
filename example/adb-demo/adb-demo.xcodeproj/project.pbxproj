@@ -310,9 +310,9 @@
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output/$(PLATFORM_NAME)/$(CURRENT_ARCH)";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ladb-full",
-					"-lc++",
-					"-lz",
+					"-lssl",
+					"-lvncclient",
+					"-lcrypto",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.adb-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -346,9 +346,9 @@
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../output/$(PLATFORM_NAME)/$(CURRENT_ARCH)";
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ladb-full",
-					"-lc++",
-					"-lz",
+					"-lssl",
+					"-lvncclient",
+					"-lcrypto",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.adb-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";

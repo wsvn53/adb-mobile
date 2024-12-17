@@ -58,7 +58,7 @@ enum class CmdlineOption { None, Enable, Disable };
 }
 
 static InstallMode best_install_mode() {
-    auto&& features = adb_get_feature_set_or_die();
+    auto&& features = adb_get_feature_set_or_die(nullptr, nullptr);
     if (CanUseFeature(*features, kFeatureCmd)) {
         return INSTALL_STREAM;
     }
@@ -66,12 +66,12 @@ static InstallMode best_install_mode() {
 }
 
 static bool is_apex_supported() {
-    auto&& features = adb_get_feature_set_or_die();
+    auto&& features = adb_get_feature_set_or_die(nullptr, nullptr);
     return CanUseFeature(*features, kFeatureApex);
 }
 
 static bool is_abb_exec_supported() {
-    auto&& features = adb_get_feature_set_or_die();
+    auto&& features = adb_get_feature_set_or_die(nullptr, nullptr);
     return CanUseFeature(*features, kFeatureAbbExec);
 }
 
