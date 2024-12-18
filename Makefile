@@ -20,6 +20,7 @@ libadb.include:
 	cp -av porting/adb/include/*.h output/include;
 
 libadb.a:
+	rm -fv output/*/*/libadb-full.a || echo ""
 	libtool -static -o output/iphoneos/arm64/libadb-full.a output/iphoneos/arm64/*.a
 	libtool -static -o output/iphonesimulator/x86_64/libadb-full.a output/iphonesimulator/x86_64/*.a
 	libtool -static -o output/iphonesimulator/arm64/libadb-full.a output/iphonesimulator/arm64/*.a

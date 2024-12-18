@@ -701,6 +701,9 @@ static int adb_shell(char **output_buffer, size_t *output_size, int argc, const 
     // Defaults.
     char escape_char = '~';                                                 // -e
     auto&& features = adb_get_feature_set_or_die(output_buffer, output_size);
+    if (features == std::nullopt) {
+        return 1;
+    }
     bool use_shell_protocol = CanUseFeature(*features, kFeatureShell2);     // -x
     PtyAllocationMode tty = use_shell_protocol ? kPtyAuto : kPtyDefinitely; // -t/-T
 
