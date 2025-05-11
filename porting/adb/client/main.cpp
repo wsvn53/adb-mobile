@@ -257,19 +257,25 @@ void launch_server_thread(int pipe_write, const char *thread_socket_spec) {
     fcntl(pipe_write, F_SETFD, 0);
     printf("[adb_porting] launch_server_main: %d\n", pipe_write);
 
-    // We don't need to do clear or reset at first time
-    static bool not_first = false;
-    if (not_first == true) {
-        clear_transport_list();
-        fdevent_reset_porting();
-    }
-    not_first = true;
-
     // Start main server
     adb_server_main(false, thread_socket_spec, nullptr, pipe_write);
 }
 
 int launch_server(const std::string& socket_spec, const char* one_device) {
+    // Before launch server, we need to clear all the transport list
+    static bool not_first = false;
+    if (not_first == true) {
+        printf("[adb_porting] terminating loop\n");
+        fdevent_get_ambient()->TerminateLoop();
+        printf("[adb_porting] cleanup sockets and threads\n");
+        adb_server_cleanup();
+        // Wait a while
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        clear_transport_list();
+        fdevent_reset_porting();
+    }
+    not_first = true;
+
     static char *thread_socket_spec;
     static int pipe_server[2];
 

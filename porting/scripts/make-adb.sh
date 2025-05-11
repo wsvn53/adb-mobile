@@ -29,7 +29,14 @@ ln -sfv "$SOURCE_ROOT/android-tools/vendor/core/diagnose_usb/include/diagnose_us
   "$SOURCE_ROOT/android-tools/vendor/core/include"
 
 # Hack source codes
+cp -av "$PORTING_ROOT/adb/"*.cpp "$SOURCE_ROOT/android-tools/vendor/adb/";
 cp -av "$PORTING_ROOT/adb/client/"* "$SOURCE_ROOT/android-tools/vendor/adb/client/";
+cp -av "$PORTING_ROOT/adb/fdevent/"* "$SOURCE_ROOT/android-tools/vendor/adb/fdevent/";
+
+# Remove abort
+grep -v "abort();" "$SOURCE_ROOT/android-tools/vendor/libbase/logging.cpp" > "$SOURCE_ROOT/android-tools/vendor/libbase/logging.cpp.tmp";
+mv -fv "$SOURCE_ROOT/android-tools/vendor/libbase/logging.cpp.tmp" \
+  "$SOURCE_ROOT/android-tools/vendor/libbase/logging.cpp";
 
 make -j16 libadb crypto decrepit libcutils libzip libdiagnoseusb libbase \
 	libadb_crypto_defaults libcrypto libadb_tls_connection_defaults;

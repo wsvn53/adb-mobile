@@ -346,10 +346,10 @@ bool adb_check_server_version(std::string* error) {
     static std::once_flag once;
     static bool result;
     static std::string* err;
-    std::call_once(once, []() {
+    // std::call_once(once, []() {
         err = new std::string();
         result = __adb_check_server_version(err);
-    });
+    // });
     *error = *err;
     return result;
 }
