@@ -1,9 +1,12 @@
+# Exit immediately on error, treat unset variables as error, and fail on pipe errors
+set -euo pipefail
+
 # Common Supports:
 # - TARGET=lz4/iphoneos/arm64
 # - OUTPUT=...
 
-[[ -z "$TARGET" ]] && echo "** ERROR: TARGET is REQUIRED." && exit 1;
-[[ -z "$OUTPUT" ]] && echo "** ERROR: OUTPUT is REQUIRED." && exit 1;
+[[ -z "${TARGET:-}" ]] && echo "** ❌ ERROR: TARGET is REQUIRED." && exit 1;
+[[ -z "${OUTPUT:-}" ]] && echo "** ❌ ERROR: OUTPUT is REQUIRED." && exit 1;
 
 LIB_NAME=$(echo "$TARGET" | cut -d/ -f1);
 SDK_NAME=$(echo "$TARGET" | cut -d/ -f2);
@@ -30,6 +33,9 @@ DEPLOYMENT_TARGET=12.0;
 if [[ $SDK_NAME == *iphone* ]]; then
 	CMAKE_TOOLCHAIN_FILE=$SOURCE_ROOT/ios-cmake/ios.toolchain.cmake;
 fi
+
+# CMake compatibility flag for older CMakeLists.txt files
+CMAKE_COMPAT_FLAGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 # Print summary
 echo " - Lib Name: $LIB_NAME";

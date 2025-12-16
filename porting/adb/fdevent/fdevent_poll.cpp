@@ -193,7 +193,8 @@ void fdevent_context_poll::Loop() {
         poll_events.clear();
     }
 
-    looper_thread_id_.reset();
+    // Notify waiting threads that the loop has exited
+    NotifyLoopExit();
 }
 
 size_t fdevent_context_poll::InstalledCount() {

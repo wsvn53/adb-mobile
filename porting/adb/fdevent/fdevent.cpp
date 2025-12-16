@@ -199,7 +199,20 @@ void fdevent_context::Run(std::function<void()> fn) {
 void fdevent_context::TerminateLoop() {
     terminate_loop_ = true;
     Interrupt();
-    looper_thread_id_.reset();
+}
+
+void fdevent_context::WaitForLoopExit() {
+    std::unique_lock<std::mutex> lock(loop_exit_mutex_);
+    // Wait until the loop has actually exited (looper_thread_id_ is reset)
+    loop_exit_cv_.wait(lock, [this]() { return !looper_thread_id_.has_value(); });
+}
+
+void fdevent_context::NotifyLoopExit() {
+    {
+        std::lock_guard<std::mutex> lock(loop_exit_mutex_);
+        looper_thread_id_.reset();
+    }
+    loop_exit_cv_.notify_all();
 }
 
 static std::unique_ptr<fdevent_context> fdevent_create_context() {
@@ -215,7 +228,7 @@ static auto& g_ambient_fdevent_context() {
     return context;
 }
 
-static fdevent_context* fdevent_get_ambient() {
+fdevent_context* fdevent_get_ambient() {
     return g_ambient_fdevent_context();
 }
 
@@ -267,6 +280,10 @@ void fdevent_check_looper() {
 
 void fdevent_terminate_loop() {
     fdevent_get_ambient()->TerminateLoop();
+}
+
+void fdevent_wait_for_loop_exit() {
+    fdevent_get_ambient()->WaitForLoopExit();
 }
 
 size_t fdevent_installed_count() {
