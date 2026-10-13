@@ -37,13 +37,18 @@ cmake -DCMAKE_OSX_SYSROOT="$SDK_NAME" -DCMAKE_OSX_ARCHITECTURES="$ARCH_NAME" \
 	-DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON \
 	-DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
 	-DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
+	-DCMAKE_CXX_FLAGS="-DFMT_CONSTEVAL=" \
 	$CMAKE_COMPAT_FLAGS ..
 
 # Patch generated Makefiles to prioritize BoringSSL includes
-# Prepend BoringSSL include to CXX_INCLUDES so it's searched first for openssl headers
-echo "→ Patching include paths to prioritize BoringSSL..."
+# Prepend BoringSSL include to CXX_INCLUDES so it's searched first for openssl headers.
+# Same for the bundled fmt: the host protobuf include dir (/opt/homebrew/include)
+# would otherwise shadow it with Homebrew's fmt headers, which do not match the
+# bundled fmt library that gets linked.
+echo "→ Patching include paths to prioritize BoringSSL and bundled fmt..."
+FMTLIB_DIR="$SOURCE_ROOT/android-tools/vendor/fmtlib"
 find "$cmake_root" -name "flags.make" -exec sed -i '' \
-	"s|^CXX_INCLUDES = |CXX_INCLUDES = -I$BORINGSSL_DIR/include |g" {} \;
+	"s|^CXX_INCLUDES = |CXX_INCLUDES = -I$BORINGSSL_DIR/include -I$FMTLIB_DIR/include |g" {} \;
 
 # Hack to fix build files, these actions must execute after cmake, otherwise may cause file conflict
 # copy sys/user.h for libbase

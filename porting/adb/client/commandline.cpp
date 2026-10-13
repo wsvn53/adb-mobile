@@ -1503,7 +1503,10 @@ const std::optional<FeatureSet>& adb_get_feature_set_or_die(char** out_buf, size
     if (!features) {
         // error_exit("%s", error.c_str());
         capture_printf(out_buf, out_buf_size, "%s\n", error.c_str());
-        return std::nullopt;
+        // Returning std::nullopt here would return a reference to a temporary
+        // (and crashes Apple clang 21 during code generation).
+        static const std::optional<FeatureSet> no_features;
+        return no_features;
     }
     return features;
 }

@@ -10,6 +10,10 @@ mkdir -pv "$cmake_root";
 
 cd "$cmake_root"
 
+# The command-line programs cannot be built for iOS; only libzstd_static is needed
+echo "→ Copying programs/CMakeLists.txt...";
+cp "$SOURCE_ROOT/porting/cmake/CMakeLists.zstd-programs.txt" "$SOURCE_ROOT/external/zstd/build/cmake/programs/CMakeLists.txt"
+
 echo "→ Running cmake...";
 cmake .. -G Xcode -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN_FILE" -DPLATFORM="$PLATFORM" \
 	-DDEPLOYMENT_TARGET="$DEPLOYMENT_TARGET" $CMAKE_COMPAT_FLAGS
