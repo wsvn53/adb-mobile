@@ -304,13 +304,17 @@ int read_and_dump_protocol(char **output_buffer, size_t *output_size, borrowed_f
     }
     while (protocol->Read()) {
       if (protocol->id() == ShellProtocol::kIdStdout) {
-        capture_printf(output_buffer, output_size, protocol->data());
+        // Device output is data, not a format string, and is not NUL-terminated.
+        capture_printf(output_buffer, output_size, "%.*s",
+                       static_cast<int>(protocol->data_length()), protocol->data());
         if (!callback->OnStdout(protocol->data(), protocol->data_length())) {
           exit_code = SIGPIPE + 128;
           break;
         }
       } else if (protocol->id() == ShellProtocol::kIdStderr) {
-        capture_printf(output_buffer, output_size, protocol->data());
+        // Device output is data, not a format string, and is not NUL-terminated.
+        capture_printf(output_buffer, output_size, "%.*s",
+                       static_cast<int>(protocol->data_length()), protocol->data());
         if (!callback->OnStderr(protocol->data(), protocol->data_length())) {
           exit_code = SIGPIPE + 128;
           break;
