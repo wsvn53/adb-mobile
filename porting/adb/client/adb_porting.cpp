@@ -16,17 +16,25 @@ int capture_printf(char **output_buffer, size_t *output_size, const char *format
     // Calculate the required buffer size.
     va_list args_copy;
     va_copy(args_copy, args);
-    const int required_size = vsnprintf(nullptr, 0, format, args_copy) + 1;  // +1 for null terminator
+    const int length = vsnprintf(nullptr, 0, format, args_copy);
     va_end(args_copy);
+    if (length < 0) {
+        // Formatting failed: leave the buffer and its NUL terminator as they are
+        va_end(args);
+        return -1;
+    }
+    const size_t required_size = static_cast<size_t>(length) + 1;  // +1 for null terminator
 
     // If the buffer is empty or not large enough, expand the buffer.
     size_t current_used_size = *output_size;  // Used output buffer size
-    *output_buffer = static_cast<char*>(realloc(*output_buffer, current_used_size + required_size));
-    if (*output_buffer == nullptr) {
+    // realloc into a temporary: on failure the caller keeps its buffer
+    char *new_buffer = static_cast<char*>(realloc(*output_buffer, current_used_size + required_size));
+    if (new_buffer == nullptr) {
         perror("realloc");
         va_end(args);
         return -1;
     }
+    *output_buffer = new_buffer;
 
     // Append new content to the end of the buffer.
     vsnprintf(*output_buffer + current_used_size, required_size, format, args);
@@ -35,7 +43,7 @@ int capture_printf(char **output_buffer, size_t *output_size, const char *format
     va_end(args);
 
     // return size of this output
-    return required_size - 1;
+    return length;
 }
 
 int adb_commandline_porting(char **output_buffer, size_t *output_buffer_size, int argc, const char** argv) {
