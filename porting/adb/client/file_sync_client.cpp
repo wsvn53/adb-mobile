@@ -219,7 +219,8 @@ struct TransferLedger {
            << direction_str << ", " << files_skipped << " skipped.";
         ss << TransferRate();
 
-        capture_printf(output_buffer, output_size, ss.str().c_str());
+        // The summary contains a file name, which is data, not a format string
+        capture_printf(output_buffer, output_size, "%s", ss.str().c_str());
         lp.Print(ss.str(), LinePrinter::LineType::INFO);
         lp.KeepInfoLine();
     }
