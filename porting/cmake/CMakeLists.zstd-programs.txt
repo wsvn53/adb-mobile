@@ -1,5 +1,0 @@
-# Minimal CMakeLists.txt for zstd programs directory
-# We only need libzstd_static, so skip building command-line programs for iOS
-project(programs)
-
-# Do nothing - we only need the library, not the CLI tools
